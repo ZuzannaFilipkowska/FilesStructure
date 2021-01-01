@@ -48,17 +48,25 @@ class Folder:
     def __str__(self):
         print(f'Folder name: {self.name}, size: {self.size}')
 
-    def look_for_folder(self, name, working_dir):
+    def ls(self, name):
         if self.name == name:
-            working_dir = self
-            return working_dir
+            self.list_elements()
         for element in self.content:
             if isinstance(element, Folder):
                 if element.name == name:
-                    working_dir = element
-                    return working_dir
+                    element.list_elements()
                 else:
-                    element.look_for_folder(self, name)
+                    element.ls(self, name)
+
+    def find(self, name):
+        if self.name == name:
+            return self
+        for element in self.content:
+            if isinstance(element, Folder):
+                if element.name == name:
+                    return element
+                else:
+                    element.find(self, name)
 
 
 '''
@@ -82,7 +90,4 @@ program ma umożliwiać:
 - podglad plikow - czyli opis pliku
 - zlczanie liczby plikow/folderow
 - zliczanie rozmiaru folderu
-
-
-
 """
