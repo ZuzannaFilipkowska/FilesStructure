@@ -66,7 +66,7 @@ class Folder:
                 if element.name == name:
                     return element
                 else:
-                    element.find(self, name)
+                    element.find(name)
 
 
 '''

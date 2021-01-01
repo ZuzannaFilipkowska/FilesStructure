@@ -4,8 +4,9 @@ from functions import cd
 
 def main():
     home = Folder('home')
-    home.directory = home
+    working_dir = Folder('working_dir')
     working_dir = home
+    # teraz working_dir jest też folderem
     answer = True
     while answer:
         # path = '~/home'
@@ -13,7 +14,7 @@ def main():
         print("Waiting for command: ")
         answer = input().split()
         if answer[0] == "cd":
-            cd(answer, working_dir, home)
+            working_dir = cd(answer, working_dir, home)
         elif answer[0] == 'mkdir':
             # make folder
             Folder(answer[1], working_dir)
