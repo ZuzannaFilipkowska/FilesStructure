@@ -7,7 +7,7 @@ class File:
         directory.content.append(self)
 
     def __str__(self):
-        return f'Name :{self.name} Type: {self._type} Size: {self.size}'
+        return f'Name:{self.name} Type:{self._type} Size:{self.size}'
 
 
 class Folder:
@@ -62,11 +62,10 @@ class Folder:
         if self.name == name:
             return self
         for element in self.content:
-            if isinstance(element, Folder):
-                if element.name == name:
-                    return element
-                else:
-                    element.find(name)
+            if element.name == name:
+                return element
+            elif isinstance(element, Folder):
+                element.find(name)
 
 
 '''
