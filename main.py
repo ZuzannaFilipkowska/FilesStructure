@@ -1,5 +1,5 @@
 from structure import File, Folder
-from commands import cd, rm
+from commands import cd, rm, get_path, count
 
 
 def main():
@@ -7,11 +7,14 @@ def main():
     working_dir = Folder('working_dir')
     working_dir = home
     answer = True
+
+    # actions = {
+    #     'cd': working_dir = cd(answer, working_dir, home)
+    # }
+
     while answer:
-        # path = '~/home'
-        # print(path)
-        print("Waiting for command: ")
-        answer = input().split()
+        path = get_path(working_dir, home)
+        answer = input(path).split()
         if answer[0] == "cd":
             working_dir = cd(answer, working_dir, home)
         elif answer[0] == 'mkdir':
@@ -22,19 +25,20 @@ def main():
             File(working_dir, answer[1], answer[2], answer[3])
         elif answer[0] == 'rm':
             # delete file or folder
-            rm(answer, working_dir, home)
+            rm(answer[1], working_dir)
         elif answer[0] == 'ls':
             # print structure
             working_dir.list_elements()
         elif answer[0] == 'cat':
             # print file/folder info
-            request = answer[1]
-            print(str(working_dir.find(request)))
+            cat(answer[1])
         elif answer[0] == 'size':
             # print folder size
             pass
+        elif answer[0] == 'count':
+            print(count(working_dir, answer[1]))
         elif answer[0] == 'pwd':
-            pass
+            print(working_dir.name)
         elif answer[0] == 'cp':
             pass
         elif answer[0] == 'mv':

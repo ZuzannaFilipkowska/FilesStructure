@@ -3,7 +3,7 @@ class File:
         self.directory = directory
         self.name = name
         self._type = type
-        self.size = size
+        self.size = int(size)
         directory.content.append(self)
 
     def __str__(self):
@@ -15,7 +15,7 @@ class Folder:
         self.content = [] if content is None else content
         self.name = name
         self.directory = directory
-        self.size = self.count_size()
+        self.size = int(self.count_size())
         if self.directory is not None:
             self.directory.content.append(self)
 
@@ -68,24 +68,11 @@ class Folder:
                 element.find(name)
 
 
-'''
-1. zalozenia projektu
-2. proste testy
-3. clasy file i folder
-3. wlasne bledy
-4. sprawdzic czy dziala
-5. interfejs uzytkownika
-
-'''
-
-
 """
 program ma umożliwiać:
-- tworzenie plików/folderów
 - usuwanie pl/fol
 - kopiowanie fol/plikow
 - przechodzenie po strukturze
-- wyswietlanie struktury
 - podglad plikow - czyli opis pliku
 - zlczanie liczby plikow/folderow
 - zliczanie rozmiaru folderu
