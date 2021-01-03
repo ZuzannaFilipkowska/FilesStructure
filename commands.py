@@ -63,3 +63,18 @@ def cat(working_dir, request):
     """
     wanted_info = str(working_dir.find(request))
     print(wanted_info)
+
+
+def ls(working_dir, request):
+    # name = working_dir.name if (len(request) == 0) else request[1]
+    if len(request) == 1:
+        name = working_dir.name
+    else:
+        name = request[1]
+    if working_dir.name == name:
+        return working_dir.list_elements()
+    for element in working_dir.content:
+        if isinstance(element, Folder):
+            if element.name == name:
+                return element.list_elements() # czy ten return jest ok?
+    print(f"ls: cannot access {name}: No such file or directory")

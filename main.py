@@ -1,5 +1,5 @@
 from structure import File, Folder
-from commands import cd, rm, get_path, count
+from commands import cd, rm, get_path, count, cat, ls
 
 
 def main():
@@ -28,7 +28,7 @@ def main():
             rm(answer[1], working_dir)
         elif answer[0] == 'ls':
             # print structure
-            working_dir.list_elements()
+            ls(working_dir, answer)
         elif answer[0] == 'cat':
             # print file/folder info
             cat(answer[1])

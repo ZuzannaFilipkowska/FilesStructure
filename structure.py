@@ -7,7 +7,7 @@ class File:
         directory.content.append(self)
 
     def __str__(self):
-        return f'Name:{self.name} Type:{self._type} Size:{self.size}'
+        return f'Name:{self.name} Type:{self._type} Size:{self.size} In directory: {self.directory}'
 
 
 class Folder:
@@ -44,19 +44,10 @@ class Folder:
                 print(intend * ' '+'-' + element.name)
             else:
                 element.list_elements(intend + 1)
+        return
 
     def __str__(self):
         print(f'Folder name: {self.name}, size: {self.size}')
-
-    def ls(self, name):
-        if self.name == name:
-            self.list_elements()
-        for element in self.content:
-            if isinstance(element, Folder):
-                if element.name == name:
-                    element.list_elements()
-                else:
-                    element.ls(self, name)
 
     def find(self, name):
         if self.name == name:

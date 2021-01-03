@@ -129,6 +129,7 @@ def test_count():
     number = count(working_dir, 'home')
     assert number == 3
 
+
 def test_count_file():
     home = Folder('home')
     working_dir = Folder('working_dir')
