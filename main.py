@@ -1,5 +1,5 @@
 from structure import File, Folder
-from commands import cd, rm, get_path, count, cat, ls
+from commands import cd, rm, get_path, cat, ls, wc, cp_mv
 
 
 def main():
@@ -34,15 +34,17 @@ def main():
             cat(answer[1])
         elif answer[0] == 'size':
             # print folder size
-            pass
-        elif answer[0] == 'count':
-            print(count(working_dir, answer[1]))
+            size = working_dir.find(answer[1]).count_size_recursive()
+            print(f'Size: {size} B')
+        elif answer[0] == 'wc':
+            # count elements in folder
+            print(wc(working_dir, answer))
         elif answer[0] == 'pwd':
             print(working_dir.name)
         elif answer[0] == 'cp':
-            pass
+            cp_mv(working_dir, answer, home, False)
         elif answer[0] == 'mv':
-            pass
+            cp_mv(working_dir, answer, home, True)
         elif answer[0] == 'exit':
             # end program
             answer = False

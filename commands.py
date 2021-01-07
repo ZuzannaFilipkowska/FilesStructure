@@ -1,4 +1,4 @@
-from structure import Folder
+from structure import Folder, File
 
 
 def cd(answer, working_dir, home):
@@ -35,8 +35,6 @@ def rm(to_be_deleted, working_dir):
             to_be_deleted.directory.delete_element(to_be_deleted)
     else:
         to_be_deleted.directory.delete_element(to_be_deleted)
-        # to za mało bo co jak ktos bedzie chciał zobaczyc plik?
-        # a jak to sie ma do funkcji size?
 
 
 def get_path(working_dir, home):
@@ -49,12 +47,32 @@ def get_path(working_dir, home):
     return path
 
 
-def count(working_dir, folder):
-    try:
-        number = len(working_dir.find(folder).content)
-    except AttributeError:
-        pass
-    return number
+def wc(working_dir, request):
+    if len(request) == 2:
+        return working_dir.find(request[1]).count_elements()
+    elif len(request) == 3:
+        if request[1] == '-f':
+            file_number = working_dir.find(request[2]).count_only_files()
+            return file_number
+        elif request[1] == '-r':
+            elements_number = 0
+            elements_number = working_dir.find(request[2]).count_elements_recursive()
+            return elements_number
+    elif len(request) == 4:
+        if request[1] == '-r' and request[2] == '-f':
+            size = working_dir.find(request[3]).count_files_recursive()
+            return size
+        elif request[1] == '-f' and request[2] == '-r':
+            size = working_dir.find(request[3]).count_files_recursive()
+            return size
+
+
+def count_elements_recursive(folder, size):
+    size += folder.count_elements()
+    for element in folder:
+        if isinstance(element, Folder):
+            size += count_elements_recursive(element)  # czy bez size =
+    return size
 
 
 def cat(working_dir, request):
@@ -76,5 +94,46 @@ def ls(working_dir, request):
     for element in working_dir.content:
         if isinstance(element, Folder):
             if element.name == name:
-                return element.list_elements() # czy ten return jest ok?
+                return element.list_elements()  # czy ten return jest ok?
     print(f"ls: cannot access {name}: No such file or directory")
+
+
+def cp_mv(working_dir, request, home, delete_original):
+    if len(request) == 4:
+        if request[1][0] == "/":
+            original = working_dir.find(request[1])
+            # rozszyfruj sciezke drugiego /home/folder1 nazwa
+            path = request[2].split('/')[1:]
+            destination = home  # czy to hoem nie bedzie zmienione?
+            for i in range(0, len(path)-1):
+                destination = destination.find(path[i+1])
+            # przekopiuj
+            copy_name = request[3]
+            original.copy(destination, copy_name)
+            if(delete_original):
+                original.directory.delete_element(original)
+        else:
+            original = working_dir.find(request[1])
+            destination = working_dir.find(request[2])
+            copy_name = request[3]
+            original.copy(destination, copy_name)
+            if(delete_original):
+                original.directory.delete_element(original)
+    elif len(request) == 3:
+        # creates copy in working dir
+        copy_name = request[2]
+        original = working_dir.find(request[1])
+        original.copy(working_dir, copy_name)
+        if(delete_original):
+            original.directory.delete_element(original)
+
+
+"""
+jeszcze komenda --help
+taka co wyswietla mozliwe komendy
+"""
+
+"""
+potem poszukac wyjatkow i przejsc do testowania
+może robić to na raz: analiza fragmentu, komentarz, wyjątki, testy
+"""
