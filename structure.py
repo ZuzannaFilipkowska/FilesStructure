@@ -1,3 +1,7 @@
+class IncorrectSizeError(ValueError):
+    pass
+
+
 class File:
     """
     Class File. Contains attributes:
@@ -20,8 +24,15 @@ class File:
         self.directory = directory
         self.name = str(name)
         self._type = type
-        self.size = int(size)
+        try:
+            size = int(size)
+            self.size = size
+            if size < 0:
+                raise IncorrectSizeError()
+        except ValueError:
+            raise IncorrectSizeError("Size must be a non-negative number")
         self.directory.add_element(self)
+
 
     def info(self):
         """

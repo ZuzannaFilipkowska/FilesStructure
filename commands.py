@@ -1,4 +1,4 @@
-from structure import Folder, File
+from structure import Folder
 
 
 def cd(answer, working_dir, home):
@@ -6,22 +6,23 @@ def cd(answer, working_dir, home):
         # go to the home folder
         working_dir = home
         return working_dir
-    elif answer[1] == "..":
-        # move one directory up
-        working_dir = working_dir.directory
-        return working_dir
-    else:
-        # go to given directory
-        given_folder = answer[1]
-        if given_folder[0] == '/':
-            path = given_folder.split('/')[1:]
-            working_dir = home
-            for i in range(0, len(path)-1):
-                working_dir = working_dir.find(path[i+1])
+    elif len(answer) == 2:
+        if answer[1] == "..":
+            # move one directory up
+            working_dir = working_dir.directory
             return working_dir
         else:
-            working_dir = working_dir.find(given_folder)
-            return working_dir
+            # go to given directory
+            given_folder = answer[1]
+            if given_folder[0] == '/':
+                path = given_folder.split('/')[1:]
+                working_dir = home
+                for i in range(0, len(path)-1):
+                    working_dir = working_dir.find(path[i+1])
+                return working_dir
+            else:
+                working_dir = working_dir.find(given_folder)
+                return working_dir
 
 
 def rm(to_be_deleted, working_dir):
