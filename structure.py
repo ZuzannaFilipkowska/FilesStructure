@@ -33,15 +33,12 @@ class File:
             raise IncorrectSizeError("Size must be a non-negative number")
         self.directory.add_element(self)
 
-
-    def info(self):
+    def __str__(self):
         """
         Returns basic description of the file.
         """
-        return f'Name:{self.name} Type:{self._type} Size:{self.size} In directory: {self.directory}'
-
-    def __str__(self):
-        return self.info()
+        description = f'Name:{self.name} Type:{self._type} Size:{self.size} In directory: {self.directory.name}'
+        return description
 
     def type(self):
         """
@@ -80,7 +77,7 @@ class Folder:
         self.content = [] if content is None else content
         self.name = name
         self.directory = directory
-        self.size = size
+        self.size = size  # sum of files sizes without files from subdir
         if self.directory is not None:
             self.directory.content.append(self)
 
@@ -137,17 +134,16 @@ class Folder:
         """
         Counts and returns size of the folder.
         """
-        size = 0
+        size = self.size
         for element in self.content:
             if isinstance(element, Folder):
-                size += element.size
                 size += element.count_size_recursive()
-        size += self.size
         return size
 
     def count_elements(self):
         """
-        Returns number of elements in folder content.
+        Returns number of elements in folder content
+        without counting elements in subdirectories.
         """
         return len(self.content)
 
@@ -185,4 +181,5 @@ class Folder:
         return size
 
     def __str__(self):
-        print(f'Folder name: {self.name}, size: {self.size}')
+        size = self.count_size_recursive()
+        return (f'Folder name: {self.name}, size: {size}')

@@ -2,6 +2,24 @@ from structure import File, Folder, IncorrectSizeError
 import pytest
 
 
+def test_create_folder():
+    home = Folder('home')
+    assert home.name == 'home'
+    assert home.size == 0
+    assert home.content == []
+    assert home.directory is None
+
+
+def test_create_folder_with_content():
+    laby = Folder('laby')
+    lab10 = File(laby, 'lab10', 'py', 100)
+    laby_copy = Folder('laby_copy', None, [lab10], laby.size)
+    assert laby_copy.name == 'laby_copy'
+    assert laby_copy.directory is None
+    assert laby_copy.content[0] == lab10
+    assert laby_copy.size == 100
+
+
 def test_create_file():
     home = Folder('home')
     lab10 = File(home, 'lab10', 'py', 100)
@@ -18,41 +36,137 @@ def test_create_file_incorrect_size():
         File(home, "file_b", 'csv', -10)
 
 
-def test_str_file():
-    pass
-
-
-def test_create_folder():
+def test_file_type():
     home = Folder('home')
-    assert home.name == 'home'
-    assert home.size == 0
+    file = File(home, 'file', 'txt', 1000)
+    assert file.type() == 'txt'
 
 
-def test_create_folder_with_content():
-    laby = Folder('laby')
-    lab10 = File(laby, 'lab10', 'py', 100)
-    laby_copy = Folder('laby_copy', None, [lab10], laby.size)
-    assert laby_copy.name == 'laby_copy'
-    assert laby_copy.content[0] == lab10
-    assert laby_copy.size == 100
+def test_str_file():
+    home = Folder('home')
+    lab10 = File(home, 'lab10', 'py', 100)
+    description = str(lab10)
+    assert description == 'Name:lab10 Type:py Size:100 In directory: home'
+
+
+def test_copy_file_into_working_dir():
+    home = Folder('home')
+    lab10 = File(home, 'lab10', 'py', 100)
+    assert len(home.content) == 1
+    lab10.copy('lab10_copy', home)
+    if_copy_exists = True if len(home.content) == 2 else False
+    assert if_copy_exists is True
+    assert home.content[1].name == 'lab10_copy'
+    assert home.content[1].size == lab10.size
+    assert home.content[1]._type == lab10._type
+
+
+def test_copy_file_to_another_dir():
+    home = Folder('home')
+    new_folder = Folder('new_folder')
+    lab10 = File(home, 'lab10', 'py', 100)
+    assert len(new_folder.content) == 0
+    lab10.copy('lab10_copy', new_folder)
+    if_copy_exists = True if len(new_folder.content) == 1 else False
+    assert if_copy_exists is True
+    assert new_folder.content[0].name == 'lab10_copy'
+    assert new_folder.content[0].size == lab10.size
+    assert new_folder.content[0]._type == lab10._type
 
 
 def test_str_folder():
-    pass
+    home = Folder('home')
+    description = str(home)
+    assert description == "Folder name: home, size: 0"
 
 
 def test_folder_size():
-    pass
-
-
-def test_make_directory():
-    pass
-
-# czy jest sens pisać takie testy?
-
-
-def test_make_file():
     home = Folder('home')
-    file1 = File(home, 'file1', 'txt', 1)
-    assert file1.size == 1
-    assert home.size == 1
+    lab10 = File(home, 'lab10', 'py', 100)
+    lab11 = File(home, 'lab11', 'py', 200)
+    lab12 = File(home, 'lab12', 'py', 1)
+    assert home.size == 301
+
+
+def test_folder_count_size_recursive():
+    home = Folder('home')
+    lab10 = File(home, 'lab10', 'py', 100)
+    lab11 = File(home, 'lab11', 'py', 200)
+    project = Folder('project', home)
+    file1 = File(project, 'file1', 'py', 100)
+    file2 = File(project, 'file2', 'py', 150)
+    size = home.count_size_recursive()
+    assert size == 550
+
+
+def test_folder_add_element():
+    home = Folder('home')
+    user_one = Folder('user_one')
+    file = File(user_one, 'file', 'exe', 1510)
+    assert home.size == 0
+    assert home.content == []
+    home.add_element(file)
+    assert len(home.content) == 1
+    assert home.size == 1510
+
+
+def test_folder_delete_element():
+    home = Folder('home')
+    file = File(home, 'file', 'exe', 1510)
+    assert home.size == 1510
+    assert len(home.content) == 1
+    home.delete_element(file)
+    assert home.size == 0
+    assert home.content == []
+
+
+def test_folder_list_elements():
+    pass
+
+
+def test_folder_find_file():
+    pass
+
+
+def test_folder_find_folder():
+    pass
+
+
+def test_folder_find_no_matches():
+    pass
+
+
+def test_copy_folder():
+    home = Folder('home')
+    movies = Folder('movies')
+    movie = File(movies, 'movie', 'mp4', 1510)
+    assert home.content == []
+    movies.copy(home, 'movies_copy')
+    assert len(home.content) == 1
+    assert home.content[0].name == 'movies_copy'
+
+
+def test_folder_count_elements():
+    pictures = Folder('pictures')
+    pic_1 = File(pictures, 'pic_1', 'jpg', 999)
+    pic_2 = File(pictures, 'pic_2', 'jpg', 999)
+    pic_3 = File(pictures, 'pic_3', 'jpg', 999)
+    pic_4 = File(pictures, 'pic_4', 'jpg', 999)
+    assert pictures.count_elements() == 4
+
+
+def test_folder_count_elements_recursive():
+    pass
+
+
+def test_folder_count_only_files():
+    pictures = Folder('pictures')
+    pic_1 = File(pictures, 'pic_1', 'jpg', 999)
+    pic_2 = File(pictures, 'pic_2', 'jpg', 999)
+    pic_3 = File(pictures, 'pic_3', 'jpg', 999)
+    holiday = Folder('holiday', pictures)
+    assert pictures.count_only_files() == 3
+
+
+def test_count_only_files_recursive():
+    pass
