@@ -66,15 +66,15 @@ def test_command_cd_incorrect_folder():
     pass
 
 
-# def test_rm_command():
-#     home = Folder('home')
-#     working_dir = Folder('working_dir')
-#     working_dir = home
-#     folder1 = Folder('folder1', home)
-#     file1 = File(home, 'file1', 'txt', 1000)
-#     assert len(home.content) == 2
-#     rm('file1', working_dir)
-#     assert len(home.content) == 1
+def test_rm_command():
+    home = Folder('home')
+    working_dir = Folder('working_dir')
+    working_dir = home
+    folder1 = Folder('folder1', home)
+    file1 = File(home, 'file1', 'txt', 1000)
+    assert len(home.content) == 2
+    rm('file1', working_dir)
+    assert len(home.content) == 1
 
 
 # def test_count():
