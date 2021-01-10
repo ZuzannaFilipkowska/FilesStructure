@@ -120,20 +120,50 @@ def test_folder_delete_element():
     assert home.content == []
 
 
-def test_folder_list_elements():
-    pass
+# def test_folder_list_elements():
+#     home = Folder('home')
+#     file1 = File(home, 'file1', 'txt', 1000)
+#     folder1= Folder('folder1', home)
+#     file2 = File(folder1, 'file2', 'txt', 1000)
+#     tree = "home/n file1/n folder1/n  file2"
+#     treee = home.list_elements()
+#     assert tree == treee
 
 
 def test_folder_find_file():
-    pass
+    home = Folder('home')
+    file1 = File(home, 'file1', 'txt', 1000)
+    folder1 = Folder('folder1', home)
+    file2 = File(folder1, 'file2', 'txt', 1000)
+    wanted = home.find('file2')
+    assert wanted == file2
+
+
+def test_folder_find_itself():
+    home = Folder('home')
+    file1 = File(home, 'file1', 'txt', 1000)
+    folder1 = Folder('folder1', home)
+    file2 = File(folder1, 'file2', 'txt', 1000)
+    wanted = home.find('home')
+    assert wanted == home
 
 
 def test_folder_find_folder():
-    pass
+    home = Folder('home')
+    file1 = File(home, 'file1', 'txt', 1000)
+    folder1= Folder('folder1', home)
+    file2 = File(folder1, 'file2', 'txt', 1000)
+    wanted = home.find('folder1')
+    assert wanted == folder1
 
 
 def test_folder_find_no_matches():
-    pass
+    home = Folder('home')
+    file1 = File(home, 'file1', 'txt', 1000)
+    folder1 = Folder('folder1', home)
+    file2 = File(folder1, 'file2', 'txt', 1000)
+    wanted = home.find('fileX')
+    assert wanted is None
 
 
 def test_copy_folder():
@@ -156,7 +186,14 @@ def test_folder_count_elements():
 
 
 def test_folder_count_elements_recursive():
-    pass
+    pictures = Folder('pictures')
+    pic_1 = File(pictures, 'pic_1', 'jpg', 999)
+    pic_2 = File(pictures, 'pic_2', 'jpg', 999)
+    pic_3 = File(pictures, 'pic_3', 'jpg', 999)
+    holiday = Folder('holiday', pictures)
+    pic_4 = File(holiday, 'pic_4', 'jpg', 999)
+    pic_5 = File(holiday, 'pic_5', 'jpg', 999)
+    assert pictures.count_elements_recursive() == 6
 
 
 def test_folder_count_only_files():
@@ -169,4 +206,11 @@ def test_folder_count_only_files():
 
 
 def test_count_only_files_recursive():
-    pass
+    pictures = Folder('pictures')
+    pic_1 = File(pictures, 'pic_1', 'jpg', 999)
+    pic_2 = File(pictures, 'pic_2', 'jpg', 999)
+    pic_3 = File(pictures, 'pic_3', 'jpg', 999)
+    holiday = Folder('holiday', pictures)
+    pic_4 = File(holiday, 'pic_4', 'jpg', 999)
+    pic_5 = File(holiday, 'pic_5', 'jpg', 999)
+    assert pictures.count_only_files_recursive() == 5

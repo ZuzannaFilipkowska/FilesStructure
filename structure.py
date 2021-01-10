@@ -120,7 +120,8 @@ class Folder:
             if element.name == name:
                 return element
             elif isinstance(element, Folder):
-                element.find(name)
+                wanted = element.find(name)
+                return wanted
 
     def copy(self, directory, copy_name):
         """
@@ -168,7 +169,7 @@ class Folder:
                 file_number += 1
         return file_number
 
-    def count_only_files_recursive(self, size):
+    def count_only_files_recursive(self, size=0):
         """
         Counts only files in folder content recursively.
         Return the value.
@@ -177,7 +178,7 @@ class Folder:
             if isinstance(element, File):
                 size += 1
             else:
-                element.count_files_recursive(size)
+                size = element.count_only_files_recursive(size)
         return size
 
     def __str__(self):
