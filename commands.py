@@ -2,6 +2,9 @@ from structure import Folder
 
 
 def cd(answer, working_dir, home):
+    """
+    Returns new working directory.
+    """
     if len(answer) == 1:
         # go to the home folder
         working_dir = home
@@ -9,6 +12,8 @@ def cd(answer, working_dir, home):
     elif len(answer) == 2:
         if answer[1] == "..":
             # move one directory up
+            if working_dir is home:
+                return working_dir
             working_dir = working_dir.directory
             return working_dir
         else:
@@ -25,20 +30,25 @@ def cd(answer, working_dir, home):
                 return working_dir
 
 
-def rm(to_be_deleted, working_dir):
+def rm(to_be_deleted, working_dir, home):
     """
     Removes given folder or file from working directory.
     """
-    to_be_deleted = working_dir.find(to_be_deleted)
-    if isinstance(to_be_deleted, Folder):
-        decision = input("Are you sure? Y/N?")
+    if to_be_deleted is not home:
+        decision = input("Are you sure? Y/N? ")
         if (decision == 'Y'):
             to_be_deleted.directory.delete_element(to_be_deleted)
+            return "Element was removed"
+        else:
+            return "Aborting"
     else:
-        to_be_deleted.directory.delete_element(to_be_deleted)
+        return "You can't remove home directory"
 
 
 def get_path(working_dir, home):
+    """
+    Returns current path.
+    """
     path = '~/home'
     text = ''
     while working_dir != home:
@@ -132,9 +142,4 @@ def cp_mv(working_dir, request, home, delete_original):
 """
 jeszcze komenda --help
 taka co wyswietla mozliwe komendy
-"""
-
-"""
-potem poszukac wyjatkow i przejsc do testowania
-może robić to na raz: analiza fragmentu, komentarz, wyjątki, testy
 """
