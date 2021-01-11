@@ -28,7 +28,7 @@ class File:
             size = int(size)
             self.size = size
             if size < 0:
-                raise IncorrectSizeError()
+                raise IncorrectSizeError("Size must be a non-negative number")
         except ValueError:
             raise IncorrectSizeError("Size must be a non-negative number")
         self.directory.add_element(self)
@@ -182,5 +182,8 @@ class Folder:
         return size
 
     def __str__(self):
+        """
+        Returns basic description of folder.
+        """
         size = self.count_size_recursive()
         return (f'Folder name: {self.name}, size: {size}')
