@@ -53,7 +53,7 @@ def test_copy_file_into_working_dir():
     home = Folder('home')
     lab10 = File(home, 'lab10', 'py', 100)
     assert len(home.content) == 1
-    lab10.copy('lab10_copy', home)
+    lab10.copy(home, 'lab10_copy')
     if_copy_exists = True if len(home.content) == 2 else False
     assert if_copy_exists is True
     assert home.content[1].name == 'lab10_copy'
@@ -66,7 +66,7 @@ def test_copy_file_to_another_dir():
     new_folder = Folder('new_folder')
     lab10 = File(home, 'lab10', 'py', 100)
     assert len(new_folder.content) == 0
-    lab10.copy('lab10_copy', new_folder)
+    lab10.copy(new_folder, 'lab10_copy')
     if_copy_exists = True if len(new_folder.content) == 1 else False
     assert if_copy_exists is True
     assert new_folder.content[0].name == 'lab10_copy'
@@ -167,6 +167,16 @@ def test_folder_find_no_matches():
 
 
 def test_copy_folder():
+    home = Folder('home')
+    movies = Folder('movies')
+    movie = File(movies, 'movie', 'mp4', 1510)
+    assert home.content == []
+    movies.copy(home, 'movies_copy')
+    assert len(home.content) == 1
+    assert home.content[0].name == 'movies_copy'
+
+
+def test_copy_file():
     home = Folder('home')
     movies = Folder('movies')
     movie = File(movies, 'movie', 'mp4', 1510)
