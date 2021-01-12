@@ -1,4 +1,4 @@
-from structure import Folder
+from structure import Folder, File
 
 
 def cd(answer, working_dir, home):
@@ -19,8 +19,8 @@ def cd(answer, working_dir, home):
         else:
             # go to given directory
             given_folder = answer[1]
-            if given_folder[0] == '/':
-                path = given_folder.split('/')[1:]
+            if "/" in given_folder:
+                path = given_folder.split('/')
                 working_dir = home
                 for i in range(0, len(path)-1):
                     working_dir = working_dir.find(path[i+1])
@@ -59,87 +59,152 @@ def get_path(working_dir, home):
 
 
 def wc(working_dir, request):
+    """
+    Returns number of elements in a folder,
+    counts recursively or counts just files if requested.
+    """
     if len(request) == 2:
         return working_dir.find(request[1]).count_elements()
     elif len(request) == 3:
         if request[1] == '-f':
-            file_number = working_dir.find(request[2]).count_only_files()
-            return file_number
+            num_of_files = working_dir.find(request[2]).count_only_files()
+            return num_of_files
         elif request[1] == '-r':
-            elements_number = 0
-            elements_number = working_dir.find(request[2]).count_elements_recursive()
-            return elements_number
+            folder = working_dir.find(request[2])
+            num_of_files = folder.count_elements_recursive()
+            return num_of_files
     elif len(request) == 4:
         if request[1] == '-r' and request[2] == '-f':
-            size = working_dir.find(request[3]).count_files_recursive()
-            return size
+            folder = working_dir.find(request[3])
+            num_of_files = folder.count_only_files_recursive()
+            return num_of_files
         elif request[1] == '-f' and request[2] == '-r':
-            size = working_dir.find(request[3]).count_files_recursive()
-            return size
+            folder = working_dir.find(request[3])
+            num_of_files = folder.count_only_files_recursive()
+            return num_of_files
 
 
-def count_elements_recursive(folder, size):
-    size += folder.count_elements()
-    for element in folder:
-        if isinstance(element, Folder):
-            size += count_elements_recursive(element)  # czy bez size =
-    return size
-
-
-def cat(working_dir, request):
+def cat(working_dir, element_name):
     """
-    Prints file/folder info.
+    Returns file/folder info.
     """
-    wanted_info = str(working_dir.find(request))
-    print(wanted_info)
+    wanted_info = str(working_dir.find(element_name))
+    if wanted_info is not None:
+        return wanted_info
+    else:
+        return f"{element_name}: No such file or directory"
 
 
 def ls(working_dir, request):
-    # name = working_dir.name if (len(request) == 0) else request[1]
-    if len(request) == 1:
-        name = working_dir.name
-    else:
-        name = request[1]
-    if working_dir.name == name:
-        return working_dir.list_elements()
-    for element in working_dir.content:
-        if isinstance(element, Folder):
-            if element.name == name:
-                return element.list_elements()  # czy ten return jest ok?
-    print(f"ls: cannot access {name}: No such file or directory")
+    name = working_dir.name if (len(request) == 1) else request[1]
+    try:
+        if working_dir.name == name:
+            return working_dir.list_elements()
+        for element in working_dir.content:
+            if isinstance(element, Folder):
+                if element.name == name:
+                    return element.list_elements()
+            if isinstance(element, File):
+                if element.name == name:
+                    print(name)
+        print(f"ls: cannot access {name}: No such file or directory")
+    except Exception:
+        print(f"ls: cannot access {name}: No such file or directory")
 
 
-def cp_mv(working_dir, request, home, delete_original):
+def cp(working_dir, request, home):
     if len(request) == 4:
-        if request[1][0] == "/":
+        # creates copy in given directory
+        if "/" in request[2]:
             original = working_dir.find(request[1])
-            # rozszyfruj sciezke drugiego /home/folder1 nazwa
-            path = request[2].split('/')[1:]
-            destination = home  # czy to hoem nie bedzie zmienione?
+            path = request[2].split('/')
+            destination = home  # czy to home nie bedzie zmienione?
             for i in range(0, len(path)-1):
                 destination = destination.find(path[i+1])
-            # przekopiuj
             copy_name = request[3]
             original.copy(destination, copy_name)
-            if(delete_original):
-                original.directory.delete_element(original)
         else:
             original = working_dir.find(request[1])
             destination = working_dir.find(request[2])
             copy_name = request[3]
             original.copy(destination, copy_name)
-            if(delete_original):
-                original.directory.delete_element(original)
     elif len(request) == 3:
         # creates copy in working dir
         copy_name = request[2]
         original = working_dir.find(request[1])
         original.copy(working_dir, copy_name)
-        if(delete_original):
-            original.directory.delete_element(original)
 
 
-"""
-jeszcze komenda --help
-taka co wyswietla mozliwe komendy
-"""
+def mv(working_dir, request, home):
+    cp(working_dir, request, home)
+    original = working_dir.find(request[1])
+    original.directory.delete_element(original)
+
+
+def help():
+    manual = """
+        Commands list:
+
+        cd - changes directory
+            cd .. - moves one directory up
+            cd - moves to home direcory
+            cd [folder_name] or cd [path/to/folder] - moves to given folder
+
+        ----------------------------------------------------------------
+
+        mkdir - makes directory
+            mk [directory name]
+
+        ----------------------------------------------------------------
+
+        mk - makes file
+            mk [file name] [file type] [file size]
+
+        ----------------------------------------------------------------
+
+        cp - copy files or directories from working dir
+            cp [origin] [destination] [name] - copy to given place
+            cp [origin] [name] - copy to working dir
+        ----------------------------------------------------------------
+
+        mv - moves files or directories from working dir
+            mv [original] [destination] [copy name] - copy to given place
+            mv [original] [copy name] - copy to working directory
+        ----------------------------------------------------------------
+
+        rm - removes file/folder
+            rm [to_be_deleted]
+
+        ----------------------------------------------------------------
+        ls - lists contents of directories in a tree-like format
+            ls - lists content od working directory
+            ls [folder name] - lists content of folder
+        ----------------------------------------------------------------
+
+        cat - prints file/folder information
+            cat [element name]
+
+        ----------------------------------------------------------------
+
+        size - prints size of folder, counted recursively
+            size [folder name]
+
+        ----------------------------------------------------------------
+        wc - counts elements, by default with depth=1
+            wc [option] [option] [folder name]
+
+           OPTIONS:
+           -r - counts recursively
+           -f - counts only files
+
+        ----------------------------------------------------------------
+
+        pwd - prints working directory name
+            pwd
+
+        ----------------------------------------------------------------
+
+        exit - ends program
+
+    """
+    return manual
