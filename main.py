@@ -1,5 +1,5 @@
 from structure import File, Folder
-from commands import cd, rm, get_path, cat, ls, wc, cp_mv
+from commands import cd, rm, get_path, cat, ls, wc, cp, mv, help
 
 
 def main():
@@ -7,7 +7,8 @@ def main():
     working_dir = Folder('working_dir')
     working_dir = home
     answer = True
-
+    starting_msg = "File system is working. Type help if needed or exit to end program./n"
+    print(starting_msg)
     while answer:
         try:
             path = get_path(working_dir, home)
@@ -44,26 +45,37 @@ def main():
                     print("Incorrect usage of: rm. Try again")
             elif answer[0] == 'ls':
                 # print structure
-                try:
-                    ls(working_dir, answer)
-                except Exception:
-                    print("Incorrect usage of: ls. Try again")
+                ls(working_dir, answer)
             elif answer[0] == 'cat':
                 # print file/folder info
-                cat(answer[1])
+                print(cat(working_dir, answer[1]))
             elif answer[0] == 'size':
                 # print folder size
-                size = working_dir.find(answer[1]).count_size_recursive()
-                print(f'Size: {size} B')
+                try:
+                    size = working_dir.find(answer[1]).count_size_recursive()
+                    print(f'Size: {size} kB')
+                except AttributeError:
+                    print("Incorrect usage of: size. Try again")
             elif answer[0] == 'wc':
                 # count elements in folder
-                print(wc(working_dir, answer))
+                try:
+                    print(wc(working_dir, answer))
+                except Exception:
+                    print("Incorrect usage of: wc. Try again")
             elif answer[0] == 'pwd':
                 print(working_dir.name)
             elif answer[0] == 'cp':
-                cp_mv(working_dir, answer, home, False)
+                try:
+                    cp(working_dir, answer, home)
+                except Exception:
+                    print("Incorrect usage of: cp. Try again")
             elif answer[0] == 'mv':
-                cp_mv(working_dir, answer, home, True)
+                try:
+                    mv(working_dir, answer, home)
+                except Exception:
+                    print("Incorrect usage of: mv. Try again")
+            elif answer[0] == 'help':
+                print(help())
             elif answer[0] == 'exit':
                 # end program
                 answer = False
