@@ -46,7 +46,7 @@ class File:
         """
         return self._type
 
-    def copy(self, copy_name, directory):
+    def copy(self, directory, copy_name):
         """
         Creates copy of file in given directory.
         """
@@ -98,7 +98,7 @@ class Folder:
 
     def list_elements(self, intend=0):
         """
-        Prints directory tree.
+        Lists contents of directories in a tree-like format.
         """
         print(intend * ' ' + self.name)
         intend += 1
@@ -121,7 +121,9 @@ class Folder:
                 return element
             elif isinstance(element, Folder):
                 wanted = element.find(name)
-                return wanted
+                if wanted:
+                    return wanted
+        return None
 
     def copy(self, directory, copy_name):
         """
@@ -163,11 +165,11 @@ class Folder:
         Counts only files in folder content.
         Returns the value.
         """
-        file_number = 0
+        num_of_files = 0
         for element in self.content:
             if isinstance(element, File):
-                file_number += 1
-        return file_number
+                num_of_files += 1
+        return num_of_files
 
     def count_only_files_recursive(self, size=0):
         """
