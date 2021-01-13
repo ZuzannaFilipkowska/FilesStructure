@@ -7,7 +7,7 @@ def main():
     working_dir = Folder('working_dir')
     working_dir = home
     answer = True
-    starting_msg = "File system is working. Type help if needed or exit to end program./n"
+    starting_msg = "File system is working. Type help if needed or exit to end program."
     print(starting_msg)
     while answer:
         try:
@@ -45,7 +45,7 @@ def main():
                     print("Incorrect usage of: rm. Try again")
             elif answer[0] == 'ls':
                 # print structure
-                ls(working_dir, answer)
+                print(ls(working_dir, answer))
             elif answer[0] == 'cat':
                 # print file/folder info
                 print(cat(working_dir, answer[1]))
