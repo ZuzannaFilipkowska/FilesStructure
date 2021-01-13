@@ -1,5 +1,5 @@
 from structure import File, Folder
-from commands import cd, cp, mv, cat, wc
+from commands import cd, cp, mv, cat, wc, ls
 
 
 def test_command_cd_without_slash():
@@ -255,3 +255,17 @@ def test_folder_wc_only_files_recursive():
     request = "wc -r -f pictures".split()
     num_of_elements = wc(pictures, request)
     assert num_of_elements == 5
+
+
+def test_ls():
+    pictures = Folder('pictures')
+    pic_1 = File(pictures, 'pic_1', 'jpg', 999)
+    pic_2 = File(pictures, 'pic_2', 'jpg', 999)
+    pic_3 = File(pictures, 'pic_3', 'jpg', 999)
+    holiday = Folder('holiday', pictures)
+    pic_4 = File(holiday, 'pic_4', 'jpg', 999)
+    pic_5 = File(holiday, 'pic_5', 'jpg', 999)
+    tree = "pictures\n -pic_1\n -pic_2\n -pic_3\n  holiday\n   -pic_4\n   -pic_5"
+    request = "ls pictures".split()
+    assert tree == ls(pictures, request)
+    pass
