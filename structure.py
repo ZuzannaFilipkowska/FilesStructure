@@ -96,18 +96,19 @@ class Folder:
         self.content.remove(element)
         self.size -= element.size
 
-    def list_elements(self, intend=0):
+    def list_elements(self, intend=0, tree=""):
         """
         Lists contents of directories in a tree-like format.
         """
-        print(intend * ' ' + self.name)
+        tree += (intend * ' ' + self.name)
         intend += 1
         for element in self.content:
             if isinstance(element, File):
-                print(intend * ' '+'-' + element.name)
+                tree += ("\n" + intend * ' '+'-' + element.name)
             else:
-                element.list_elements(intend + 1)
-        return
+                tree += "\n"
+                tree = element.list_elements(intend + 1, tree)
+        return tree
 
     def find(self, name):
         """
