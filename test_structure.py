@@ -151,7 +151,7 @@ def test_folder_find_itself():
 def test_folder_find_folder():
     home = Folder('home')
     file1 = File(home, 'file1', 'txt', 1000)
-    folder1= Folder('folder1', home)
+    folder1 = Folder('folder1', home)
     file2 = File(folder1, 'file2', 'txt', 1000)
     wanted = home.find('folder1')
     assert wanted == folder1

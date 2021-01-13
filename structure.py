@@ -42,7 +42,7 @@ class File:
 
     def type(self):
         """
-        Return type of file.
+        Returns type of file.
         """
         return self._type
 

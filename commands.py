@@ -160,6 +160,8 @@ def help():
         mk - makes file
             mk [file name] [file type] [file size]
 
+            enter size in kB
+
         ----------------------------------------------------------------
 
         cp - copy files or directories from working dir

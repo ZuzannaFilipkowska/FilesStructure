@@ -255,5 +255,3 @@ def test_folder_wc_only_files_recursive():
     request = "wc -r -f pictures".split()
     num_of_elements = wc(pictures, request)
     assert num_of_elements == 5
-
-
