@@ -97,19 +97,15 @@ def cat(working_dir, element_name):
 
 def ls(working_dir, request):
     name = working_dir.name if (len(request) == 1) else request[1]
+    element = working_dir.find(name)
     try:
-        if working_dir.name == name:
-            return working_dir.list_elements()
-        for element in working_dir.content:
-            if isinstance(element, Folder):
-                if element.name == name:
-                    return element.list_elements()
-            if isinstance(element, File):
-                if element.name == name:
-                    print(name)
-        print(f"ls: cannot access {name}: No such file or directory")
+        if isinstance(element, File):
+            return element.name
+        elif isinstance(element, Folder):
+            return element.list_elements()
+        return (f"ls: cannot access {name}: No such file or directory")
     except Exception:
-        print(f"ls: cannot access {name}: No such file or directory")
+        return(f"ls: cannot access {name}: No such file or directory")
 
 
 def cp(working_dir, request, home):
