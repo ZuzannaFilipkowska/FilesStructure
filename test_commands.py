@@ -83,7 +83,14 @@ def test_command_rm(monkeypatch):
     assert len(home.content) == 1
 
 
-def test_get_path():
+def test_get_path_default():
+    home = Folder('home')
+    working_dir = home
+    path = get_path(working_dir, home)
+    assert path == "~/home "
+
+
+def test_get_path_typical():
     home = Folder('home')
     pictures = Folder('pictures', home)
     holiday = Folder('holiday', pictures)
@@ -127,6 +134,19 @@ def test_command_wc_recursive():
 
 
 def test_command_wc_only_files_recursive():
+    pictures = Folder('pictures')
+    pic_1 = File(pictures, 'pic_1', 'jpg', 999)
+    pic_2 = File(pictures, 'pic_2', 'jpg', 999)
+    pic_3 = File(pictures, 'pic_3', 'jpg', 999)
+    holiday = Folder('holiday', pictures)
+    pic_4 = File(holiday, 'pic_4', 'jpg', 999)
+    pic_5 = File(holiday, 'pic_5', 'jpg', 999)
+    request = "wc -f -r pictures".split()
+    num_of_elements = wc(pictures, request)
+    assert num_of_elements == 5
+
+
+def test_command_wc_recursive_only_files():
     pictures = Folder('pictures')
     pic_1 = File(pictures, 'pic_1', 'jpg', 999)
     pic_2 = File(pictures, 'pic_2', 'jpg', 999)
