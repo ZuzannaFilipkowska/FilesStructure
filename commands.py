@@ -52,9 +52,9 @@ def get_path(working_dir, home):
     path = '~/home'
     text = ''
     while working_dir != home:
-        text = working_dir.name + '/' + text
+        text = '/' + working_dir.name + text
         working_dir = working_dir.directory
-    path = (path + '/' + text + ' ') if text != '' else (path + ' ')
+    path = (path + text + ' ') if text != '' else (path + ' ')
     return path
 
 

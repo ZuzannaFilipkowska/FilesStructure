@@ -20,6 +20,14 @@ def test_create_folder_with_content():
     assert laby_copy.size == 100
 
 
+def test_folder_create_folder_size():
+    home = Folder('home')
+    lab10 = File(home, 'lab10', 'py', 100)
+    lab11 = File(home, 'lab11', 'py', 200)
+    lab12 = File(home, 'lab12', 'py', 1)
+    assert home.size == 301
+
+
 def test_create_file():
     home = Folder('home')
     lab10 = File(home, 'lab10', 'py', 100)
@@ -74,18 +82,15 @@ def test_copy_file_to_another_dir():
     assert new_folder.content[0]._type == lab10._type
 
 
-def test_str_folder():
+def test_folder_add_element():
     home = Folder('home')
-    description = str(home)
-    assert description == "Folder name: home, size: 0"
-
-
-def test_folder_size():
-    home = Folder('home')
-    lab10 = File(home, 'lab10', 'py', 100)
-    lab11 = File(home, 'lab11', 'py', 200)
-    lab12 = File(home, 'lab12', 'py', 1)
-    assert home.size == 301
+    user_one = Folder('user_one')
+    file = File(user_one, 'file', 'exe', 1510)
+    assert home.size == 0
+    assert home.content == []
+    home.add_element(file)
+    assert len(home.content) == 1
+    assert home.size == 1510
 
 
 def test_folder_count_size_recursive():
@@ -99,17 +104,6 @@ def test_folder_count_size_recursive():
     assert size == 550
 
 
-def test_folder_add_element():
-    home = Folder('home')
-    user_one = Folder('user_one')
-    file = File(user_one, 'file', 'exe', 1510)
-    assert home.size == 0
-    assert home.content == []
-    home.add_element(file)
-    assert len(home.content) == 1
-    assert home.size == 1510
-
-
 def test_folder_delete_element():
     home = Folder('home')
     file = File(home, 'file', 'exe', 1510)
@@ -120,14 +114,13 @@ def test_folder_delete_element():
     assert home.content == []
 
 
-# def test_folder_list_elements():
-#     home = Folder('home')
-#     file1 = File(home, 'file1', 'txt', 1000)
-#     folder1= Folder('folder1', home)
-#     file2 = File(folder1, 'file2', 'txt', 1000)
-#     tree = "home/n file1/n folder1/n  file2"
-#     treee = home.list_elements()
-#     assert tree == treee
+def test_folder_list_elements():
+    home = Folder('home')
+    file1 = File(home, 'file1', 'txt', 1000)
+    folder1 = Folder('folder1', home)
+    file2 = File(folder1, 'file2', 'txt', 1000)
+    tree = "home\n -file1\n  folder1\n   -file2"
+    assert tree == home.list_elements()
 
 
 def test_folder_find_file():
@@ -224,3 +217,9 @@ def test_count_only_files_recursive():
     pic_4 = File(holiday, 'pic_4', 'jpg', 999)
     pic_5 = File(holiday, 'pic_5', 'jpg', 999)
     assert pictures.count_only_files_recursive() == 5
+
+
+def test_str_folder():
+    home = Folder('home')
+    description = str(home)
+    assert description == "Folder name: home, size: 0"
