@@ -1,6 +1,10 @@
 from structure import Folder, File
 
 
+class CannotCopyHomeError(Exception):
+    pass
+
+
 def cd(answer, working_dir, home):
     """
     Returns new working directory.
@@ -113,14 +117,18 @@ def cp(working_dir, request, home):
         # creates copy in given directory
         if "/" in request[2]:
             original = working_dir.find(request[1])
+            if original == home:
+                raise CannotCopyHomeError("Action Permitted. Cannot copy whole  directory")
             path = request[2].split('/')
-            destination = home  # czy to home nie bedzie zmienione?
+            destination = home
             for i in range(0, len(path)-1):
                 destination = destination.find(path[i+1])
             copy_name = request[3]
             original.copy(destination, copy_name)
         else:
             original = working_dir.find(request[1])
+            if original == home:
+                raise CannotCopyHomeError("Action Permitted. Cannot copy whole directory")
             destination = working_dir.find(request[2])
             copy_name = request[3]
             original.copy(destination, copy_name)
@@ -128,6 +136,8 @@ def cp(working_dir, request, home):
         # creates copy in working dir
         copy_name = request[2]
         original = working_dir.find(request[1])
+        if original == home:
+            raise CannotCopyHomeError("Action Permitted. Cannot copy home directory")
         original.copy(working_dir, copy_name)
 
 
@@ -151,12 +161,15 @@ def help():
         mkdir - makes directory
             mk [directory name]
 
+            folder name should be unique
+
         ----------------------------------------------------------------
 
         mk - makes file
             mk [file name] [file type] [file size]
 
             enter size in kB
+            file name should be unique
 
         ----------------------------------------------------------------
 
@@ -175,7 +188,7 @@ def help():
 
         ----------------------------------------------------------------
         ls - lists contents of directories in a tree-like format
-            ls - lists content od working directory
+            ls - lists content of working directory
             ls [folder name] - lists content of folder
         ----------------------------------------------------------------
 
