@@ -1,6 +1,8 @@
 from structure import File, Folder
 from commands import cd, cp, mv, cat, wc, ls, rm, get_path, help
+from commands import CannotCopyHomeError
 from io import StringIO
+import pytest
 
 
 def test_command_cd_without_slash():
@@ -247,6 +249,24 @@ def test_copy_folder_to_another_folder_with_path():
     assert folder2.content[0].name == "folder1_copy"
 
 
+def test_copy_home():
+    home = Folder('home')
+    working_dir = Folder('working_dir')
+    working_dir = home
+    request = 'cp home domek'.split()
+    with pytest.raises(CannotCopyHomeError):
+        cp(working_dir, request, home)
+
+
+def test_move_home():
+    home = Folder('home')
+    working_dir = Folder('working_dir')
+    working_dir = home
+    request = 'mv home domek'.split()
+    with pytest.raises(CannotCopyHomeError):
+        mv(working_dir, request, home)
+
+
 def test_move_folder_to_working_dir():
     home = Folder('home')
     working_dir = Folder('working_dir')
@@ -318,12 +338,15 @@ def test_help():
         mkdir - makes directory
             mk [directory name]
 
+            folder name should be unique
+
         ----------------------------------------------------------------
 
         mk - makes file
             mk [file name] [file type] [file size]
 
             enter size in kB
+            file name should be unique
 
         ----------------------------------------------------------------
 
@@ -342,7 +365,7 @@ def test_help():
 
         ----------------------------------------------------------------
         ls - lists contents of directories in a tree-like format
-            ls - lists content od working directory
+            ls - lists content of working directory
             ls [folder name] - lists content of folder
         ----------------------------------------------------------------
 
